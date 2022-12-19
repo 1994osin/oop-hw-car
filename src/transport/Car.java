@@ -2,7 +2,7 @@ package transport;
 
 import java.time.LocalDate;
 
-public class Car {
+public class Car extends Transport {
     public static class Key {
         private final boolean remoteEngineStart;
         private final boolean keylessAccess;
@@ -74,12 +74,7 @@ public class Car {
         }
     }
 
-    private final String brand;
-    private final String model;
     private double engineVolume;
-    private String color;
-    private final int year;
-    private final String country;
     private String transmission;
     private final String bodyType;
     private String registrationNumber;
@@ -95,6 +90,9 @@ public class Car {
                String color,
                int year,
                String country,
+               int maxSpeed,
+               String fuelType,
+               double fuelPercentage,
                String transmission,
                String bodyType,
                String registrationNumber,
@@ -102,19 +100,21 @@ public class Car {
                boolean summerTires,
                Key key,
                Insurance insurance) {
-        this.brand = (brand == null || brand.isBlank()) ? "default" : brand;    // -----------------------------------
-        this.model = (model == null || model.isBlank()) ? "default" : model;    // -----------------------------------
+        super(brand, model, year, country, color, maxSpeed, fuelType, fuelPercentage);
         setEngineVolume(engineVolume);
-        setColor(color);
-        this.year = (year <= 0) ? 2000 : year;  // -----------------------------------
-        this.country = (country == null || country.isBlank()) ? "default" : country;    // -----------------------------------
         setTransmission(transmission);
-        this.bodyType = (bodyType == null || bodyType.isBlank()) ? "седан" : bodyType;  // -----------------------------------
+        this.bodyType = (bodyType == null || bodyType.isBlank()) ? "седан" : bodyType;
         setRegistrationNumber(registrationNumber);
-        this.numberOfSeats = (numberOfSeats <= 0) ? 4 : numberOfSeats;  // -----------------------------------
+        this.numberOfSeats = (numberOfSeats <= 0) ? 4 : numberOfSeats;
         this.summerTires = summerTires;
         setKey(key);
         setInsurance(insurance);
+    }
+
+    @Override
+    public void refill() {
+        System.out.println(getBrand() + " " + getModel() + ", тип топлива: " + getFuelType());
+        setFuelPercentage(100);
     }
 
     public void changeTiresForSeason(int numberMonth) {
@@ -141,12 +141,8 @@ public class Car {
     @Override
     public String toString() {
         return "Car{" +
-                "brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
+                super.toString() +
                 ", engineVolume=" + engineVolume +
-                ", color='" + color + '\'' +
-                ", year=" + year +
-                ", country='" + country + '\'' +
                 ", transmission='" + transmission + '\'' +
                 ", bodyType='" + bodyType + '\'' +
                 ", registrationNumber='" + registrationNumber + '\'' +
@@ -154,15 +150,7 @@ public class Car {
                 ", summerTires=" + summerTires +
                 ", key=" + key +
                 ", insurance=" + insurance +
-                '}';
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModel() {
-        return model;
+                "} ";
     }
 
     public double getEngineVolume() {
@@ -173,28 +161,12 @@ public class Car {
         this.engineVolume = (engineVolume <= 0) ? 1.5 : engineVolume;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = (color == null || color.isBlank()) ? "белый" : color;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
     public String getTransmission() {
         return transmission;
     }
 
     public void setTransmission(String transmission) {
-        this.transmission = transmission;
+        this.transmission = (transmission == null || transmission.isBlank()) ? "МКПП" : transmission;
     }
 
     public String getBodyType() {
@@ -206,7 +178,7 @@ public class Car {
     }
 
     public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
+        this.registrationNumber = (registrationNumber == null || registrationNumber.isBlank()) ? "х000хх000" : registrationNumber;
     }
 
     public int getNumberOfSeats() {
